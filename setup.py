@@ -4,18 +4,12 @@ from setuptools import setup, find_packages
 import torch
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
-if os.environ.get("TORCH_CUDA_ARCH_LIST"):
-    # Let PyTorch builder to choose device to target for.
-    device_capability = ""
-else:
-    device_capability = torch.cuda.get_device_capability()
-    device_capability = f"{device_capability[0]}{device_capability[1]}"
+device_capability = "90"  # NOTE: Pinned version for SM90
 
 cwd = Path(os.path.dirname(os.path.abspath(__file__)))
 
-nvcc_flags = [
-    "-std=c++17",  # NOTE: CUTLASS requires c++17
-]
+cxx_flags = ["-O2", "-std=c++17", "-fopenmp", "-fPIC", "-Wno-strict-aliasing"]
+nvcc_flags = ["-O2", "-std=c++17"]
 
 if device_capability:
     nvcc_flags.extend([
@@ -32,9 +26,7 @@ ext_modules = [
             f"{cwd}/csrc"
         ],
         extra_compile_args={
-            "cxx": [
-                "-fopenmp", "-fPIC", "-Wno-strict-aliasing"
-            ],
+            "cxx": cxx_flags,
             "nvcc": nvcc_flags,
         }
     )
