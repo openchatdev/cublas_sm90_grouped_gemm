@@ -8,7 +8,7 @@ device_capability = "90"  # NOTE: Pinned version for SM90
 
 cwd = Path(os.path.dirname(os.path.abspath(__file__)))
 
-cxx_flags = ["-O2", "-std=c++17", "-fopenmp", "-fPIC", "-Wno-strict-aliasing"]
+cxx_flags = ["-O2", "-fopenmp", "-fPIC", "-Wno-strict-aliasing"]
 nvcc_flags = ["-O2", "-std=c++17"]
 
 if device_capability:
